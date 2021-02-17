@@ -1,0 +1,24 @@
+sudo: required
+language: node_js
+node_js:
+  - "14"
+services: 
+  - docker
+before_script:
+  - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+  - curl https://cli-assets.heroku.com/install.sh | sh  #install heroku
+  - docker login --username=$HEROKU_LOGIN --password=$api_key registry.heroku.com
+
+script:
+  - docker build -t mencia/testdocker:v2 .
+  - docker tag mencia/testdocker:v2 registry.heroku.com/$heroku_app/web
+
+deploy:
+  provider: script
+  script:
+    docker push mencia/testdocker:v2;
+    docker push registry.heroku.com/$heroku_app/web;
+    heroku container:release web --app $heroku_app
+  on:
+    repo: mencia1999/dockerTest
+    branch: master
