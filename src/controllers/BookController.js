@@ -83,7 +83,7 @@ class BookController {
       const books = await Book.find();
       res.status(200).send(books);
     } catch (err) {
-      res.status(404).send("Hello test");
+      res.status(404).send("Hello test gg");
     }
   };
   /**
